@@ -21,7 +21,7 @@ const initializationAndServer = async () => {
   } catch (e) {
     console.log(`DB Error:${e.message}`);
     process.exit(1);
-  };
+  }
 };
 
 initializationAndServer();
@@ -31,7 +31,7 @@ const convertToObject = (object) =>{
         stateId : object.state_id,
         stateName : object.state_name,
         population : object.population
-    };
+    }
 };
 
 const convertResponseToObject = (district) => {
@@ -43,7 +43,7 @@ const convertResponseToObject = (district) => {
         cured : district.cured,
         active : district.active,
         deaths : district.deaths
-    };
+    }
 };
 
 const convertResponseIntoObject = (stateReport) =>{
@@ -52,7 +52,7 @@ const convertResponseIntoObject = (stateReport) =>{
         totalCured : stateReport.cured,
         totalActive : stateReport.active,
         totalDeaths : stateReport.deaths
-    };
+    }
 };
 
 //get
@@ -90,7 +90,7 @@ app.get("/states/:stateId/",async(request,response)=>{
 
 //post
 
-app.post("/districts/",asyn(request,response){
+app.post("/districts/",async(request,response){
     const details = request.body;
     const {districtName,stateId,cases,cured,active,deaths} = details
     const postQuery = `
@@ -102,7 +102,7 @@ app.post("/districts/",asyn(request,response){
          ${cured},
          ${active},
          ${deaths}
-    );
+    )
     `;
     const resultPost = await db.run(postQuery);
     response.send("District Successfully Added")
@@ -116,7 +116,7 @@ app.get("/districts/:districtId/",async(request,response)=>{
       *
     FROM
       district
-    WHERE district_id = ${districtId};`;
+    WHERE district_id = ${districtId}`;
     const getDistrict = await db.all(districtQuery);
     response.send(covertResponseToObject)
 });
@@ -128,14 +128,14 @@ app.delete("/districts/:districtId/",async(request,response) =>{
     const deleteQuery = `DELETE FROM
         district
     WHERE 
-        district_id = ${districtId};`;
+        district_id = ${districtId}`;
     await db.run(deleteQuery)
     response.send("District Removed");
 });
 
 //put
 
-app.put("/districts/:districtId/",async(request.response) =>{
+app.put("/districts/:districtId/",async(request,response) =>{
     const{districtName,stateId,cured,active,deaths} = request.body;
     const {districtId} = request.params;
     const putQuery = `UPDATE
